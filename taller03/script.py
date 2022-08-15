@@ -34,10 +34,10 @@ def calculate_func(img):
 
 def scaled_matrix(img):
     rows, cols = img.shape[1], img.shape[0]
-    aux1 = 0.75*math.cos(65)*42+(-0.75*math.sin(65)*-37)
-    aux2 = 0.75*math.sin(65)*42+(0.75*math.cos(65)*-37)
-    M = np.float32([[0.75*math.cos(65), -0.75*math.sin(65), aux1],
-                   [0.75*math.sin(65), -0.75*math.cos(65), aux2]])
+    #aux1 = 0.75*math.cos(65)*42+(-0.75*math.sin(65)*-37)
+    #aux2 = 0.75*math.sin(65)*42+(0.75*math.cos(65)*-37)
+    M = np.float32([[0.31696, -0.67973, 38.4623],
+                   [0.67973, 0.31696, 16.8211]])
     return cv2.warpAffine(img, M, (cols, rows))
 
 
