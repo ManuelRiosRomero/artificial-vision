@@ -8,7 +8,7 @@ import math
 
 def translate(img):
     rows, cols = img.shape[1], img.shape[0]
-    M = np.float32([[1, 0, 42], [0, 1, 37]])
+    M = np.float32([[1, 0, 42], [0, 1, -37]])
     return cv2.warpAffine(img, M, (cols, rows))
 
 
@@ -19,26 +19,37 @@ def rotation(img):
 
 
 def scaled(img):
-    scale_percent = 75
-    width = int(img.shape[1] * scale_percent / 100)
-    height = int(img.shape[0] * scale_percent / 100)
+    #scale_percent = 75
+    
+    width = int(img.shape[1] * 0.75)
+    height = int(img.shape[0] * 0.75)
     dsize = (width, height)
     return cv2.resize(img, dsize)
 
 
 def calculate_func(img):
     dst = scaled(img)
-    dst = translate(dst)
-    return rotation(dst)
+    dst= rotation(dst)
+    return  translate(dst)
+
+   
+    
 
 
 def scaled_matrix(img):
+    #rotacion es horaria, toca volver antihoraria y cuadrar movimiento
     rows, cols = img.shape[1], img.shape[0]
-    #aux1 = 0.75*math.cos(65)*42+(-0.75*math.sin(65)*-37)
-    #aux2 = 0.75*math.sin(65)*42+(0.75*math.cos(65)*-37)
-    M = np.float32([[0.31696, -0.67973, 38.4623],
-                   [0.67973, 0.31696, 16.8211]])
-    return cv2.warpAffine(img, M, (cols, rows))
+    x,y=rows/2,cols/2
+    #resultados escalar
+   # au1=(0.25*x)
+   # au2=(0.25*y)
+    #resultados de rotacion
+    #aux1=((-x *0.422)-(y *0.906)+x)
+    #aux2=((x *0.906)-(y*0.422)+y)
+    #rotacion sale del marco
+    M = np.float32([[0.31696, 0.67973, ((0.6835*x)-(0.6795*y)-11.8485)],
+                  [-0.67973, 0.31696, ((0.6795*x)+(0.6835*y)-40.2495)]])
+    return cv2.warpAffine(img, M, (rows, cols))
 
 
 def calculate_matrix(img):
