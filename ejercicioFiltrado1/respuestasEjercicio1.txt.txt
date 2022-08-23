@@ -1,0 +1,36 @@
+	¿Aplicarlo 5 veces consecutivas sobre la imagen
+	utilizando un tamaño de ventana o kernel de 3x3 genera el mismo resultado que
+	aplicarlo una única vez con un tamaño de ventana o kernel de 11x11?
+Rta:No, a parte de las diferencias visibles en las imagenes, el tamaño de
+las mimas es afectado. Las imagenes con un kernel de 3x3 son de mayor tamaño que las 11x11.
+Vale resaltar que esto no es lo mismo para todos los filtros.
+
+	¿Para qué tipos de filtros es esto válido?
+Rta:Para el filtro 2D blurs, el tamaño entre las imagenes era el más similar. 
+Al usar los otros filtros, como gaussean blur o el median blur, el tamaño entre la imagen
+con kernel de 3x3 y 11x11 era mucho mayor. En ambos casos la imagen 3x3 tambien aumenta en
+tamaño a comparacion de la original.
+
+Las imagenes 3x3 del gaussean blur y median blur no se ven muy diferentes de la imagen original.
+Pero los filtros de 11x11 ya se nota más la diferencia. Con el filtro 2D blurs si se ve un
+cambio escalonado entra la original, la 3x3 y la 11x11.
+
+	¿Entre la dos versiones, cual sería la más rápida de aplicar?
+Rta: Aplicar un filtro 3x3 cinco veces es más rápido que aplicar un 11x11 una unica vez.
+Utilizando la funcion de time de python se consigue los siguientes resultados para cada
+filtro:
+
+Time 3x3 kernel, gauss blur:
+0.000499725341796875
+Time 11x11 kernel, gauss blur:
+0.0069942474365234375
+Time 3x3 kernel, filter2D:
+0.006302595138549805
+Time 11x11 kernel, filter2D:
+0.01323556900024414
+Time 3x3 kernel, median blur:
+0.0004837512969970703
+Time 11x11 kernel, median blur:
+0.043035268783569336
+
+Se nota que el tiempo en los 3x3 es menor que los 11x11 en todos los casos.

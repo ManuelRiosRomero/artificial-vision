@@ -1,0 +1,3 @@
+la mejor combinacion que encontramos fue sacar el filtrado por promedio 4 veces con 3x3
+luego de filtro bilateral 7 veces con kernel 7x7
+y acabando con un realce 3x3  
