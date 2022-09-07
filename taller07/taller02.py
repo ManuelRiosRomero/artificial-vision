@@ -4,13 +4,6 @@ import numpy as np
 
 
 def main(argv):
-    print("""
-    Zoom In-Out demo
-    ------------------
-    * [i] -> Zoom [i]n
-    * [o] -> Zoom [o]ut
-    * [ESC] -> Close program
-    """)
 
     filename = argv[0] if len(argv) > 0 else 'a.jpg'
     # Load the image
@@ -23,19 +16,51 @@ def main(argv):
         return -1
 
     #src = cv.pyrUp(src, dstsize=(2 * cols, 2 * rows))
-    src = down_scale(src, "nivel-1.jpg")
-    src = down_scale(src, "nivel-2.jpg")
-    src = down_scale(src, "nivel-3.jpg")
-    src = cv.imread(cv.samples.findFile(filename))
-    src = upscale(src, "nivel1.jpg")
-    src = upscale(src, "nivel2.jpg")
-    src = upscale(src, "nivel3.jpg")
+    src = down_scale(src, "Gaussian_nivel-1.jpg")
+    src = down_scale(src, "Gaussian_nivel-2.jpg")
+    src = down_scale(src, "Gaussian_nivel-3.jpg")
+       
 
-    print('** Zoom In: Image x 2')
+    src = cv.imread(cv.samples.findFile(filename))
+    src = upscale(src, "Gaussian_nivel1.jpg")
+    src = upscale(src, "Gaussian_nivel2.jpg")
+    src = upscale(src, "Gaussian_nivel3.jpg")
+    
+    ## Diferencias de nivel (Laplaciana)
+    aux = cv.imread('Gaussian_nivel-3.jpg')
+    cv.imwrite("Laplaciana_nivel_0.jpg",aux) 
+    #laplaciana nivel 1
+    src = cv.imread('Gaussian_nivel-2.jpg') - upscale2(aux) 
+    cv.imwrite("Laplaciana_nivel_1.jpg",src) 
+    
+    #laplaciana nivel 2
+    aux = cv.imread('Gaussian_nivel-2.jpg')
+    src = cv.imread('Gaussian_nivel-1.jpg') - upscale2(aux) 
+    cv.imwrite("Laplaciana_nivel_2.jpg",src) 
+
+    #laplaciana nivel 3
+    aux = cv.imread('Gaussian_nivel-1.jpg')
+    src = cv.imread('a.jpg') - upscale2(aux) 
+    cv.imwrite("Laplaciana_nivel_3.jpg",src) 
+
+    #laplaciana nivel 4
+    aux = cv.imread('a.jpg')
+    src = cv.imread('Gaussian_nivel1.jpg') - upscale2(aux) 
+    cv.imwrite("Laplaciana_nivel_4.jpg",src) 
+
+    #laplaciana nivel 5
+    aux = cv.imread('Gaussian_nivel1.jpg')
+    src = cv.imread('Gaussian_nivel2.jpg') - upscale2(aux) 
+    cv.imwrite("Laplaciana_nivel_5.jpg",src) 
+
+    #laplaciana nivel 6
+    aux = cv.imread('Gaussian_nivel2.jpg')
+    src = cv.imread('Gaussian_nivel3.jpg') - upscale2(aux) 
+    cv.imwrite("Laplaciana_nivel_6.jpg",src) 
 
     return 0
 
-
+# Upscale que escribe la imagen de una
 def upscale(src, title):
     new_matrix = proccessImageUpscale(src)
     new_matrix = proccess_upscale(src, new_matrix)
@@ -43,10 +68,17 @@ def upscale(src, title):
     cv.imwrite(title, src)
     return src
 
+# upscale que no escribe la imagen
+def upscale2(src):
+    new_matrix = proccessImageUpscale(src)
+    new_matrix = proccess_upscale(src, new_matrix)
+    src = gaussBiggerLayer(new_matrix)
+    return src
+
 
 def proccess_upscale(image, new_image):
     k, z = 0, 0
-    print(new_image.shape)
+    #print(new_image.shape)
     for i in range(len(new_image)):
         for j in range(len(new_image)):
             if i % 2 != 0 and j % 2 != 0:
