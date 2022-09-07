@@ -40,11 +40,11 @@ def main(argv):
 
     #laplaciana nivel 3
     aux = cv.imread('Gaussian_nivel-1.jpg')
-    src = cv.imread('a.jpg') - upscale2(aux) 
+    src = cv.imread(filename) - upscale2(aux) 
     cv.imwrite("Laplaciana_nivel_3.jpg",src) 
 
     #laplaciana nivel 4
-    aux = cv.imread('a.jpg')
+    aux = cv.imread(filename)
     src = cv.imread('Gaussian_nivel1.jpg') - upscale2(aux) 
     cv.imwrite("Laplaciana_nivel_4.jpg",src) 
 
@@ -59,6 +59,10 @@ def main(argv):
     cv.imwrite("Laplaciana_nivel_6.jpg",src) 
 
     return 0
+
+def laplaciana(img1, img2):
+    img2 = upscale2(img2)
+    return img1 - img2
 
 # Upscale que escribe la imagen de una
 def upscale(src, title):
