@@ -3,46 +3,43 @@ import cv2 as cv
 import argparse
 import numpy as np
 
-im = cv.imread("c.jpg")
 
-def compute_otsu_criteria(im, th):
-    # create the thresholded image
-    thresholded_im = np.zeros(im.shape)
-    thresholded_im[im >= th] = 1
+def get_otsu_treshhold(image, th):
+    # generar nueva prop img
+    thresholded_im = np.zeros(image.shape)
+    thresholded_im[image >= th] = 1
 
-    # compute weights
-    nb_pixels = im.size
+    # generar pesos
+    nb_pixels = image.size
     nb_pixels1 = np.count_nonzero(thresholded_im)
     weight1 = nb_pixels1 / nb_pixels
     weight0 = 1 - weight1
 
-    # if one the classes is empty, eg all pixels are below or above the threshold, that threshold will not be considered
-    # in the search for the best threshold
     if weight1 == 0 or weight0 == 0:
         return np.inf
 
-    # find all pixels belonging to each class
-    val_pixels1 = im[thresholded_im == 1]
-    val_pixels0 = im[thresholded_im == 0]
+    # encontrar pixeles de clase
+    val_pixels1 = image[thresholded_im == 1]
+    val_pixels0 = image[thresholded_im == 0]
 
-    # compute variance of these classes
     var0 = np.var(val_pixels0) if len(val_pixels0) > 0 else 0
     var1 = np.var(val_pixels1) if len(val_pixels1) > 0 else 0
 
     return weight0 * var0 + weight1 * var1
 
+image = cv.imread("b.jpg")
 
-threshold_range = range(np.max(im)+1)
-criterias = [compute_otsu_criteria(im, th) for th in threshold_range]
+threshold_range = range(np.max(image)+1)
+criterias = [get_otsu_treshhold(image, th) for th in threshold_range]
 
 
-best_threshold = threshold_range[np.argmin(criterias)]
+otsu_threshold = threshold_range[np.argmin(criterias)]
 print("------------------------------")
 print("Umbral Calculado: ")
-print(best_threshold)
+print(otsu_threshold)
 
-ret,thresh1 = cv.threshold(im,best_threshold,255,cv.THRESH_BINARY)
-ret,thresh4 = cv.threshold(im,best_threshold,255,cv.THRESH_TOZERO)
+ret,thresh1 = cv.threshold(image,otsu_threshold,255,cv.THRESH_BINARY)
+ret,thresh4 = cv.threshold(image,otsu_threshold,255,cv.THRESH_TOZERO)
 
 cv.imwrite("imagenBinarial.jpg",thresh1 )
 cv.imwrite("imagenTruncado.jpg",thresh4 )
