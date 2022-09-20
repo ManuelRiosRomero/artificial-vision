@@ -1,8 +1,9 @@
+from __future__ import print_function
+import cv2 as cv
+import argparse
 import numpy as np
 
-import cv2 as cv
-
-im = cv.imread("a.jpg")
+im = cv.imread("c.jpg")
 
 def compute_otsu_criteria(im, th):
     # create the thresholded image
@@ -30,15 +31,18 @@ def compute_otsu_criteria(im, th):
 
     return weight0 * var0 + weight1 * var1
 
-# load your image as a numpy array.
-#im = 
-# For testing purposes, one can use for example im = np.random.randint(0,255, size = (50,50))
 
-# testing all thresholds from 0 to the maximum of the image
 threshold_range = range(np.max(im)+1)
 criterias = [compute_otsu_criteria(im, th) for th in threshold_range]
 
-# best threshold is the one minimizing the Otsu criteria
+
 best_threshold = threshold_range[np.argmin(criterias)]
-print("umbral: " + best_threshold)
-#cv.imwrite("imagenUmbral.jpg", )
+print("------------------------------")
+print("Umbral Calculado: ")
+print(best_threshold)
+
+ret,thresh1 = cv.threshold(im,best_threshold,255,cv.THRESH_BINARY)
+ret,thresh4 = cv.threshold(im,best_threshold,255,cv.THRESH_TOZERO)
+
+cv.imwrite("imagenBinarial.jpg",thresh1 )
+cv.imwrite("imagenTruncado.jpg",thresh4 )
