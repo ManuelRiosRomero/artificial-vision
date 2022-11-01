@@ -1,77 +1,78 @@
 import sys
+import time
 import cv2 as cv
 import numpy as np
-import time
 
-def get8n(x, y, shape):
-    out = []
+
+def vecinos(x, y, shape):
+    salida = []
     maxx = shape[1]-1
     maxy = shape[0]-1
     
-    #top left
-    outx = min(max(x-1,0),maxx)
-    outy = min(max(y-1,0),maxy)
-    out.append((outx,outy))
+    #top-left
+    salidax = min(max(x-1,0),maxx)
+    saliday = min(max(y-1,0),maxy)
+    salida.append((salidax,saliday))
     
-    #top center
-    outx = x
-    outy = min(max(y-1,0),maxy)
-    out.append((outx,outy))
+    #top-center
+    salidax = x
+    saliday = min(max(y-1,0),maxy)
+    salida.append((salidax,saliday))
     
-    #top right
-    outx = min(max(x+1,0),maxx)
-    outy = min(max(y-1,0),maxy)
-    out.append((outx,outy))
+    #top-right
+    salidax = min(max(x+1,0),maxx)
+    saliday = min(max(y-1,0),maxy)
+    salida.append((salidax,saliday))
     
-    #left
-    outx = min(max(x-1,0),maxx)
-    outy = y
-    out.append((outx,outy))
+    #center-left
+    salidax = min(max(x-1,0),maxx)
+    saliday = y
+    salida.append((salidax,saliday))
     
-    #right
-    outx = min(max(x+1,0),maxx)
-    outy = y
-    out.append((outx,outy))
+    #center-right
+    salidax = min(max(x+1,0),maxx)
+    saliday = y
+    salida.append((salidax,saliday))
     
-    #bottom left
-    outx = min(max(x-1,0),maxx)
-    outy = min(max(y+1,0),maxy)
-    out.append((outx,outy))
+    #bottom-left
+    salidax = min(max(x-1,0),maxx)
+    saliday = min(max(y+1,0),maxy)
+    salida.append((salidax,saliday))
     
-    #bottom center
-    outx = x
-    outy = min(max(y+1,0),maxy)
-    out.append((outx,outy))
+    #bottom-center
+    salidax = x
+    saliday = min(max(y+1,0),maxy)
+    salida.append((salidax,saliday))
     
-    #bottom right
-    outx = min(max(x+1,0),maxx)
-    outy = min(max(y+1,0),maxy)
-    out.append((outx,outy))
+    #bottom-right
+    salidax = min(max(x+1,0),maxx)
+    saliday = min(max(y+1,0),maxy)
+    salida.append((salidax,saliday))
     
-    return out
+    return salida
 
 
 
 def region_growing(img, seed, tolerancia):
-    seed_points = []
-    outimg = np.zeros_like(img)
-    seed_points.append((seed[0], seed[1]))
+    semillas2 = []
+    imagenSalida = np.zeros_like(img)
+    semillas2.append((seed[0], seed[1]))
     processed = []
-    while(len(seed_points) > 0):
-        pix = seed_points[0]
-        outimg[pix[0], pix[1]] = 255
+    while(len(semillas2) > 0):
+        pix = semillas2[0]
+        imagenSalida[pix[0], pix[1]] = 255
         intensidad = img[seed[0], seed[1]]
-        for coord in get8n(pix[0], pix[1], img.shape):      
-            promedio = homogeniedad(img, coord[0], coord[1], img.shape)
+        for lados in vecinos(pix[0], pix[1], img.shape):      
+            promedio = homogeniedad(img, lados[0], lados[1], img.shape)
             if abs(int(promedio - intensidad)) <= tolerancia :
-                outimg[coord[0], coord[1]] = 255
-                if not coord in processed:
-                    seed_points.append(coord)
-                processed.append(coord)
-        seed_points.pop(0)
-        cv.imshow("progress",outimg)
+                imagenSalida[lados[0], lados[1]] = 255
+                if not lados in processed:
+                    semillas2.append(lados)
+                processed.append(lados)
+        semillas2.pop(0)
+        cv.imshow("Proceso en Vivo",imagenSalida)
         cv.waitKey(1)
-    return outimg
+    return imagenSalida
 
 def homogeniedad(img, x, y, shape):
     maxx = shape[1]-1
