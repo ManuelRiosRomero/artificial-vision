@@ -3,7 +3,6 @@ import time
 import cv2 as cv
 import numpy as np
 
-
 def vecinos(x, y, shape):
     salida = []
     maxx = shape[1]-1
@@ -51,9 +50,7 @@ def vecinos(x, y, shape):
     
     return salida
 
-
-
-def region_growing(img, seed, tolerancia):
+def segmentacion(img, seed, tolerancia):
     semillas2 = []
     imagenSalida = np.zeros_like(img)
     semillas2.append((seed[0], seed[1]))
